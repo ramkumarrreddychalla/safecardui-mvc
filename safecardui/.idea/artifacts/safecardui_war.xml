@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="safecardui:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="safecardui.war">
+      <element id="artifact" artifact-name="safecardui:war exploded" />
+    </root>
+  </artifact>
+</component>
