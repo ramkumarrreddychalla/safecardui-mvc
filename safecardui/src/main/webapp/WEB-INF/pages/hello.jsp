@@ -18,18 +18,24 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Bootstrap Core JavaScript -->
-	<script src="service/service.js"></script>
-	<script src="controllers/controllers.js"></script>
 
 	<script language="JavaScript">
 
 		var profileExps = "${profileDates}";
 		var profileArry = profileExps.substring(1, (profileExps.length-1)).split(",");
-		var branches = "${branches}";
-		var branchesLength = "${branchesLength}";
+
 		//document.getElementById("branchesLength").innerHTML = ''+branchesLength;
 
 		$(document).ready(function() {
+			var branches = "${branches}";
+			var branchesLength = "${branchesLength}";
+			var numberoflicenses = "${noOfLicenses}";
+			var status = "${status}";
+			document.getElementById("dateOfExpiry").innerHTML = profileArry[0];
+			document.getElementById("branchesLength").innerHTML = branchesLength;
+			document.getElementById("numberoflicenses").innerHTML = numberoflicenses;
+			document.getElementById("status").innerHTML = status;
+
 			$('#profileTypes').change(function(){
 				alert('branchesLength >>'+branchesLength);
 				var valueProfile = this.value;
@@ -42,6 +48,10 @@
 
 			});
 		});
+
+		function formSubmit() {
+			document.myForm.submit();
+		}
 
 	</script>
 
@@ -79,12 +89,9 @@
 	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
-
 </head>
 
 <body>
-
-
 <div>
 	<!-- Navigation -->
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -111,6 +118,11 @@
 					<li>
 						<a href="#">Contact</a>
 					</li>
+
+					<li align="right">
+						Welcome : ${pageContext.request.userPrincipal.name}	<a href="javascript:formSubmit();"> Logout</a>
+					</li>
+
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -119,8 +131,11 @@
 	</nav>
 
 	<div class="container">
+		<c:url value="/j_spring_security_logout" var="logoutUrl" />
+		<form:form method="post" class="form-horizontal"  name="myForm" modelAttribute="profile" action="${logoutUrl}">
 
-		<form:form method="post" class="form-horizontal"  name="myForm" modelAttribute="profile">
+			<input type="hidden" name="${_csrf.parameterName}"  value="${_csrf.token}" />
+
 			<fieldset>
 
 				<!-- Form Name -->
@@ -157,16 +172,7 @@
 				<div class="form-group">
 					<label class="col-md-4 control-label" for="numberoflicenses">No. of Lic#</label>
 					<div class="col-md-4">
-						<label id="branchesLength" for="branchesLength"></label>
-					</div>
-				</div>
-
-				<!-- Text input-->
-				<div class="form-group">
-					<label class="col-md-4 control-label" for="numofbranches">No. of Branches</label>
-					<div class="col-md-4">
-						<!--<input id="numofbranches" name="numofbranches" type="text" placeholder="50" class="form-control input-md"> -->
-						{{profile.branches.length}}
+						<label id="numberoflicenses" for="numberoflicenses"></label>
 					</div>
 				</div>
 
@@ -174,8 +180,7 @@
 				<div class="form-group">
 					<label class="col-md-4 control-label" for="status">Status</label>
 					<div class="col-md-4">
-						<!--<input id="status" name="status" type="text" placeholder="N/A" class="form-control input-md"> -->
-						{{profile.status}}
+						<label id="status" for="status"></label>
 					</div>
 				</div>
 
@@ -196,6 +201,17 @@
 			<div class="rTableHead">Description</div>
 		</div>
 
+		<c:forEach items="${branches}" var="branch">
+			<div class="rTableRow" ng-repeat="branch in profile.branches">
+				<div class="rTableCell"><c:out value="${branch.alias}"/></div>
+				<div class="rTableCell"><c:out value="${branch.id}"/></div>
+				<div class="rTableCell"><c:out value="${branch.host}"/></div>
+				<div class="rTableCell"><c:out value="${branch.status}"/></div>
+				<div class="rTableCell"><c:out value="${branch.desc}"/></div>
+			</div>
+		</c:forEach>
+
+<!--
 		<div class="rTableRow" ng-repeat="branch in profile.branches">
 			<div class="rTableCell">{{branch.alias}}</div>
 			<div class="rTableCell">{{branch.id}}</a></div>
@@ -203,6 +219,7 @@
 			<div class="rTableCell">{{branch.status}}</div>
 			<div class="rTableCell">{{branch.desc}}</div>
 		</div>
+-->
 	</div>
 	</div>
 	<!-- jQuery Version 1.11.1 -->

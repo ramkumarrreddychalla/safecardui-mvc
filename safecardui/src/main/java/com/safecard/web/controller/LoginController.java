@@ -45,8 +45,6 @@ public class LoginController {
 		return branches;
 	}
 
-
-
 	@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
 	public ModelAndView welcomePage() {
 
@@ -75,6 +73,7 @@ public class LoginController {
 		model.addObject("branchesLength", branches.size());
 		model.addObject("profile", profile);
 		model.addObject("noOfLicenses", profile.getNumLicenses());
+		model.addObject("status", profile.getStatus());
 
 		//model.setViewName("hello");
 		return model;
